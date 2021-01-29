@@ -6,6 +6,8 @@
  * ******************************************************/
 package specifications;
 
+import javafx.scene.image.Image;
+
 public interface DataService extends ReadService, WriteService{
   public void init();
   
@@ -15,4 +17,5 @@ public interface DataService extends ReadService, WriteService{
   public int getTimerSaut();
   public void setTimerSaut(int i);
   public void setJumping(boolean b);
+  public void setImg(Image image);
 }

@@ -17,6 +17,9 @@ import specifications.RequireDataService;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javafx.scene.image.Image;
+
 import java.util.Random;
 import java.util.ArrayList;
 
@@ -73,15 +76,25 @@ public class Engine implements EngineService, RequireDataService{
 
   @Override
   public void setHeroesCommand(User.COMMAND c){
-    if (c==User.COMMAND.LEFT) moveLeft=true;
-    if (c==User.COMMAND.RIGHT) moveRight=true;
+    if (c==User.COMMAND.LEFT) {
+    	moveLeft=true;
+    	data.setImg(new Image("file:src/images/courir_inverse.gif"));
+    }
+    if (c==User.COMMAND.RIGHT) {
+    	moveRight=true;
+    	data.setImg(new Image("file:src/images/v2.gif"));
+    }
   }
   
   @Override
   public void releaseHeroesCommand(User.COMMAND c){
     if (c==User.COMMAND.LEFT) moveLeft=false;
     if (c==User.COMMAND.RIGHT) moveRight=false;
-    if (c==User.COMMAND.UP) data.setJumping(true);
+    if (c==User.COMMAND.UP) {
+    	if (data.isJumping() == true)
+    		return ;
+    	data.setJumping(true);
+    }
 
   }
 
@@ -96,15 +109,14 @@ public class Engine implements EngineService, RequireDataService{
   }
   
   private void updatePositionHeroes(){
-    data.setHeroesPosition(new Position(data.getHeroesPosition().x+heroesVX,data.getHeroesPosition().y+heroesVY));
-    //if (data.getHeroesPosition().x<0) data.setHeroesPosition(new Position(0,data.getHeroesPosition().y));
-    //etc...
+    data.setHeroesPosition(new Position(data.getHeroesPosition().x+heroesVX,data.getHeroesPosition().y));
   }
 
 	@Override
 	public void gravity() {
 		  if ((data.getHeroesPosition().y + data.getHeroesHeight())/HardCodedParameters.defaultHeight >= 0.8) {
 				data.setVitesseY(0);
+				data.setJumping(false);
 		  }else {
 			  Position p = new Position(data.getHeroesPosition().x,data.getHeroesPosition().y+data.getVitesseY());
 			  data.setHeroesPosition(p);
@@ -113,14 +125,9 @@ public class Engine implements EngineService, RequireDataService{
 	  }
 	
 	public void jump() {
-		if(data.isJumping()) {
-			Position p = new Position(data.getHeroesPosition().x, data.getHeroesPosition().y - 10);
+		if (data.isJumping()) {
+			Position p = new Position(data.getHeroesPosition().x, data.getHeroesPosition().y - 5);
 			data.setHeroesPosition(p);
-			data.setTimerSaut(data.getTimerSaut() -1);
-			System.out.println(data.getTimerSaut());
-			if(data.getTimerSaut() <= 0) {
-				data.setJumping(false);
-			}
 		}
 	}
 }

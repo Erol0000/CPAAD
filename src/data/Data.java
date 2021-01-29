@@ -9,7 +9,7 @@ package data;
 import tools.HardCodedParameters;
 import tools.Position;
 import tools.Sound;
-
+import javafx.scene.image.Image;
 import specifications.DataService;
 
 public class Data implements DataService{
@@ -21,6 +21,7 @@ public class Data implements DataService{
   private int timerSaut;
   private double g = HardCodedParameters.g;
   private boolean jumping = false;
+  private Image img = new Image("file:src/images/v2.gif");
 
   public Data(){}
 
@@ -80,9 +81,16 @@ public void setTimerSaut(int i) {
 @Override
 public void setJumping(boolean b) {
 	jumping = b;
-	if (jumping == false) {
-		timerSaut = HardCodedParameters.timerSautValue;
-	}
+}
+
+@Override
+public void setImg(Image image) {
+	this.img = image;
+}
+
+@Override
+public Image getImage() {
+	return img;
 }
 
 }

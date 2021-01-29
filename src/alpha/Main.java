@@ -76,7 +76,6 @@ public class Main extends Application{
           if (event.getCode()==KeyCode.LEFT) engine.setHeroesCommand(User.COMMAND.LEFT);
           if (event.getCode()==KeyCode.RIGHT) engine.setHeroesCommand(User.COMMAND.RIGHT);
           if (event.getCode()==KeyCode.UP) engine.setHeroesCommand(User.COMMAND.UP);
-//          if (event.getCode()==KeyCode.DOWN) engine.setHeroesCommand(User.COMMAND.DOWN);
           event.consume();
         }
     });
@@ -85,7 +84,7 @@ public class Main extends Application{
         public void handle(KeyEvent event) {
           if (event.getCode()==KeyCode.LEFT) engine.releaseHeroesCommand(User.COMMAND.LEFT);
           if (event.getCode()==KeyCode.RIGHT) engine.releaseHeroesCommand(User.COMMAND.RIGHT);
-          if (event.getCode()==KeyCode.UP) {data.setJumping(true);}
+          if (event.getCode()==KeyCode.UP) engine.releaseHeroesCommand(User.COMMAND.UP);
           event.consume();
         }
     });
@@ -118,8 +117,8 @@ public class Main extends Application{
     timer = new AnimationTimer() {
       @Override public void handle(long l) {
         scene.setRoot(((Viewer)viewer).getPanel());
-        engine.gravity();
         engine.jump();
+        engine.gravity();
 
       }
     };

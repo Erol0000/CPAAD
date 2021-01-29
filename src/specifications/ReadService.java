@@ -6,6 +6,7 @@
  * ******************************************************/
 package specifications;
 
+import javafx.scene.image.Image;
 import tools.Position;
 import tools.Sound;
 
@@ -15,4 +16,6 @@ public interface ReadService {
   public double getHeroesWidth();
   public double getHeroesHeight();
   public int getScore();
+  
+public Image getImage();
 }

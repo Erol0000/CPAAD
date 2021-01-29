@@ -29,6 +29,7 @@ public class Viewer implements ViewerService, RequireReadService{
   private ImageView heroesAvatar;
   private Image heroesSpriteSheet;
   private double xShrink,yShrink,shrink,xModifier,yModifier;
+private ImageView map;
 
   public Viewer(){}
   
@@ -47,11 +48,12 @@ public class Viewer implements ViewerService, RequireReadService{
     //Yucky hard-conding
     heroesSpriteSheet = new Image("file:src/images/v2.gif");
     heroesAvatar = new ImageView(heroesSpriteSheet);
-
+    map = new ImageView(new Image("file:src/images/essaie2.png"));
   }
 
   @Override
   public Parent getPanel(){
+	  
     shrink=Math.min(xShrink,yShrink);
     xModifier=.01*shrink*defaultMainHeight;
     yModifier=.01*shrink*defaultMainHeight;
@@ -59,13 +61,18 @@ public class Viewer implements ViewerService, RequireReadService{
     
     
     Group panel = new Group();
+    heroesAvatar = new ImageView(data.getImage());
     heroesAvatar.setTranslateX(data.getHeroesPosition().x);
     heroesAvatar.setTranslateY(data.getHeroesPosition().y);
     heroesAvatar.setScaleX(0.25);
     heroesAvatar.setScaleY(0.25);
+    
+    System.out.println(map.getX());
+//    map.setScaleX(100);
+//    map.setScaleY(100);
 
 //    System.out.println(data.getHeroesPosition().y);
-    panel.getChildren().addAll(heroesAvatar);
+    panel.getChildren().addAll(heroesAvatar,map);
 
     return panel;
   }

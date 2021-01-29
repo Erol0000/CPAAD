@@ -15,7 +15,6 @@ public class HardCodedParameters {
                           spriteSlowDownRate = 7;
   public static final double g = 0.1;
   public static final double vitesseSaut = 0.022d;
-  public static final int timerSautValue = 23;
 
   public static final double friction = 0.50;
 
