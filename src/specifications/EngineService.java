@@ -6,6 +6,7 @@
  * ******************************************************/
 package specifications;
 
+import javafx.scene.shape.Rectangle;
 import tools.User;
 
 public interface EngineService{
@@ -16,4 +17,6 @@ public interface EngineService{
   public void releaseHeroesCommand(User.COMMAND c);
   public void gravity();
   public void jump();
+  public boolean collisionPlateforme(Rectangle r);
+  public void openDoor();
 }

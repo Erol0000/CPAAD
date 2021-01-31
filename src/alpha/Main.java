@@ -6,6 +6,7 @@
  * ******************************************************/
 package alpha;
 
+import tools.Chrono;
 import tools.HardCodedParameters;
 import tools.User;
 import tools.Sound;
@@ -14,7 +15,6 @@ import specifications.DataService;
 import specifications.EngineService;
 import specifications.ViewerService;
 import specifications.AlgorithmService;
-
 import data.Data;
 import engine.Engine;
 import userInterface.Viewer;
@@ -52,6 +52,7 @@ public class Main extends Application{
     data = new Data();
     engine = new Engine();
     viewer = new Viewer();
+    Chrono.start();
 
     ((Engine)engine).bindDataService(data);
     ((Viewer)viewer).bindReadService(data);
@@ -68,11 +69,12 @@ public class Main extends Application{
 
     scene.setFill(Color.WHITE);
     scene.setOnKeyPressed(new EventHandler<KeyEvent>(){
-    	
-    	
       @Override
         public void handle(KeyEvent event) {
-
+    	  if (data.endGame() == true) {
+    		  event.consume();
+    		  return ;
+    	  }
           if (event.getCode()==KeyCode.LEFT) engine.setHeroesCommand(User.COMMAND.LEFT);
           if (event.getCode()==KeyCode.RIGHT) engine.setHeroesCommand(User.COMMAND.RIGHT);
           if (event.getCode()==KeyCode.UP) engine.setHeroesCommand(User.COMMAND.UP);
@@ -82,6 +84,10 @@ public class Main extends Application{
     scene.setOnKeyReleased(new EventHandler<KeyEvent>(){
       @Override
         public void handle(KeyEvent event) {
+    	  if (data.endGame() == true) {
+    		  event.consume();
+    		  return ;
+    	  }
           if (event.getCode()==KeyCode.LEFT) engine.releaseHeroesCommand(User.COMMAND.LEFT);
           if (event.getCode()==KeyCode.RIGHT) engine.releaseHeroesCommand(User.COMMAND.RIGHT);
           if (event.getCode()==KeyCode.UP) engine.releaseHeroesCommand(User.COMMAND.UP);
@@ -117,9 +123,11 @@ public class Main extends Application{
     timer = new AnimationTimer() {
       @Override public void handle(long l) {
         scene.setRoot(((Viewer)viewer).getPanel());
-        engine.jump();
-        engine.gravity();
-
+        if (data.endGame() == false) {
+        	engine.jump();
+        	engine.gravity();
+        	engine.openDoor();
+        }
       }
     };
     timer.start();

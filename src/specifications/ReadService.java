@@ -6,7 +6,11 @@
  * ******************************************************/
 package specifications;
 
+import java.util.ArrayList;
+
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.shape.Rectangle;
 import tools.Position;
 import tools.Sound;
 
@@ -17,5 +21,15 @@ public interface ReadService {
   public double getHeroesHeight();
   public int getScore();
   
-public Image getImage();
+  public Image getImage();
+  public void addCollisionMap(Rectangle r);
+  public boolean isAddPiece();
+  public ImageView getDoor();
+  public boolean endGame();
+  public ArrayList<Rectangle> getCollisionMap();
+  public Rectangle getCollisionPiece();
+  public boolean isJumping();
+  public double getVitesseY();
+
+
 }

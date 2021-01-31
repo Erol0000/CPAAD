@@ -6,8 +6,10 @@
  * ******************************************************/
 package engine;
 
+import tools.Chrono;
 import tools.HardCodedParameters;
 import tools.User;
+import userInterface.Viewer;
 import tools.Position;
 import tools.Sound;
 
@@ -18,7 +20,11 @@ import specifications.RequireDataService;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.sun.glass.ui.View;
+
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.shape.Rectangle;
 
 import java.util.Random;
 import java.util.ArrayList;
@@ -109,25 +115,105 @@ public class Engine implements EngineService, RequireDataService{
   }
   
   private void updatePositionHeroes(){
+	  if (data.endGame() == true) {
+		  return ;
+	  }
     data.setHeroesPosition(new Position(data.getHeroesPosition().x+heroesVX,data.getHeroesPosition().y));
   }
 
 	@Override
 	public void gravity() {
-		  if ((data.getHeroesPosition().y + data.getHeroesHeight())/HardCodedParameters.defaultHeight >= 0.8) {
+		collisionPiece();
+		for (Rectangle r : data.getCollisionMap()) {
+			if (collisionPlateforme(r)) {
 				data.setVitesseY(0);
 				data.setJumping(false);
-		  }else {
-			  Position p = new Position(data.getHeroesPosition().x,data.getHeroesPosition().y+data.getVitesseY());
-			  data.setHeroesPosition(p);
-			  data.setVitesseY(data.getVitesseY()+HardCodedParameters.g);
-		  }
+			}
+		}
+		Position p = new Position(data.getHeroesPosition().x,data.getHeroesPosition().y+data.getVitesseY());
+		data.setHeroesPosition(p);
+		data.setVitesseY(data.getVitesseY()+HardCodedParameters.g);
+		
+		if (data.getHeroesPosition().y > HardCodedParameters.defaultHeight) {
+			p = new Position(HardCodedParameters.heroesStartX,HardCodedParameters.heroesStartY);
+			data.setHeroesPosition(p);
+			data.setVitesseY(0);
+			data.setJumping(false);
+		}
 	  }
 	
 	public void jump() {
 		if (data.isJumping()) {
-			Position p = new Position(data.getHeroesPosition().x, data.getHeroesPosition().y - 5);
+			Position p = new Position(data.getHeroesPosition().x, data.getHeroesPosition().y - 7);
 			data.setHeroesPosition(p);
 		}
 	}
+	
+	public boolean collisionPlateforme(Rectangle r) {
+
+		Rectangle rec = new Rectangle( data.getHeroesWidth() - 35 , data.getHeroesHeight() - 40);
+	    rec.setTranslateX(data.getHeroesPosition().x + 50);
+	    rec.setTranslateY(data.getHeroesPosition().y + 50);
+	    
+	    Boolean intersection = intersection(rec,r);
+	    
+	    return intersection;
+	}
+	
+	private boolean intersection(Rectangle r1, Rectangle r2) {
+		double y1 = r1.getTranslateY() + data.getVitesseY();
+		double yh = y1 + r1.getHeight();
+		
+		double x1 = r1.getTranslateX();
+		double xw = x1 + r1.getWidth();
+		
+	    if (y1 < r2.getTranslateY() && yh > r2.getTranslateY()
+	    		&& x1 + r1.getWidth() > r2.getTranslateX() && x1 < r2.getTranslateX() + r2.getWidth()) {
+	            return true;
+	    }
+	    return false;
+	}
+	
+	private void collisionPiece() {
+		if (data.getHeroesPosition().y > data.getCollisionPiece().getTranslateY() 
+				|| data.isJumping() == true) {
+			return ;
+		}
+		Rectangle rec = new Rectangle( data.getHeroesWidth() - 35 , data.getHeroesHeight() - 40);
+	    rec.setTranslateX(data.getHeroesPosition().x + 50);
+	    rec.setTranslateY(data.getHeroesPosition().y + 50);
+		
+		Rectangle r2 = data.getCollisionPiece();
+		double y2 = r2.getTranslateY();
+		double yh = y2 + r2.getHeight();
+		
+		double x2 = r2.getTranslateX();
+		double xw = x2 + r2.getWidth();
+		
+		if (rec.getTranslateX() + rec.getWidth() > x2 && rec.getTranslateX() + rec.getWidth() < xw) {
+			data.setIsAddPiece(false);
+		}
+	}
+	
+	public void openDoor() {
+		double x = data.getHeroesPosition().x + 50;
+		double y = data.getHeroesPosition().y + 50;
+		double xw = data.getHeroesWidth() - 35;
+		double xh = data.getHeroesHeight() - 40;
+		
+		double mx = x + xw/2;
+		double mh = y + xh/2;
+		
+		
+		if (data.isJumping()==false && mx > data.getDoor().getTranslateX() && mx < data.getDoor().getTranslateX() + data.getDoor().getImage().getWidth()
+				&& mh > data.getDoor().getTranslateY() && mh < data.getDoor().getTranslateY() + data.getDoor().getImage().getHeight()) {
+			data.setDoor(new ImageView(new Image("file:src/images/ouverture.jpg")));
+			
+			Chrono.stop();
+			long time = Chrono.getTime();
+			System.out.println(time/1000);
+			data.endGame(true);
+		}
+	}
+	
 }

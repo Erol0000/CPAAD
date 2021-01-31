@@ -9,7 +9,7 @@ package tools;
 public class HardCodedParameters {
   //---HARD-CODED-PARAMETERS---//
   public static String defaultParamFileName = "in.parameters";
-  public static final int defaultWidth = 800, defaultHeight = 600,
+  public static final int defaultWidth = 600, defaultHeight = 600,
                           heroesStartX = 80, heroesStartY = 200, heroesWidth=60, heroesHeight=90, heroesStep = 10;
   public static final int enginePaceMillis = 100,
                           spriteSlowDownRate = 7;

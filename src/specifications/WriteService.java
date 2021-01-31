@@ -6,6 +6,8 @@
  * ******************************************************/
 package specifications;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import tools.Position;
 import tools.Sound;
 
@@ -13,4 +15,12 @@ import tools.Sound;
 public interface WriteService {
   public void setHeroesPosition(Position p);
   public void addScore(int score);
+  public void setIsAddPiece(boolean b);
+  public void setDoor(ImageView image);
+  public void endGame(boolean b);
+  public void setImg(Image image);
+  public void setTimerSaut(int i);
+  public void setJumping(boolean b);
+  public void setVitesseY(double VitesseY);
+
 }
