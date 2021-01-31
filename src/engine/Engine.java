@@ -66,11 +66,9 @@ public class Engine implements EngineService, RequireDataService{
         updateSpeedHeroes();
         updateCommandHeroes();
         updatePositionHeroes();
-
         int score=0;
-
         data.addScore(score);
-
+        collisionPiece();
       }
     },0,HardCodedParameters.enginePaceMillis);
   }
@@ -118,21 +116,33 @@ public class Engine implements EngineService, RequireDataService{
 	  if (data.endGame() == true) {
 		  return ;
 	  }
-    data.setHeroesPosition(new Position(data.getHeroesPosition().x+heroesVX,data.getHeroesPosition().y));
+	  data.setHeroesPosition(new Position(data.getHeroesPosition().x+heroesVX,data.getHeroesPosition().y));
+	  for (Rectangle r : data.getCollisionMap()) {
+			if ((collisionPlateforme(r) && data.isJumping() == true) || (data.getVitesseY() > 0.1 && data.isJumping() == false)) {
+				data.setHeroesPosition(new Position(data.getHeroesPosition().x-heroesVX,data.getHeroesPosition().y));
+				return ;
+			}
+	  }
   }
-
-	@Override
+  	@Override
 	public void gravity() {
-		collisionPiece();
+		boolean collisionTop = false;
 		for (Rectangle r : data.getCollisionMap()) {
 			if (collisionPlateforme(r)) {
-				data.setVitesseY(0);
-				data.setJumping(false);
+				if (data.getVitesseY() + HardCodedParameters.g < HardCodedParameters.jumpForce && data.isJumping() == true) {
+					data.setVitesseY(HardCodedParameters.jumpForce);
+					collisionTop = true;
+				}
+				break ;
 			}
 		}
 		Position p = new Position(data.getHeroesPosition().x,data.getHeroesPosition().y+data.getVitesseY());
 		data.setHeroesPosition(p);
 		data.setVitesseY(data.getVitesseY()+HardCodedParameters.g);
+		
+		if (collisionTop == true) {
+			return ;
+		}
 		
 		if (data.getHeroesPosition().y > HardCodedParameters.defaultHeight) {
 			p = new Position(HardCodedParameters.heroesStartX,HardCodedParameters.heroesStartY);
@@ -140,11 +150,20 @@ public class Engine implements EngineService, RequireDataService{
 			data.setVitesseY(0);
 			data.setJumping(false);
 		}
+		
+		for (Rectangle r : data.getCollisionMap()) {
+			if (collisionPlateforme(r)) {
+					data.setVitesseY(0);
+					data.setJumping(false);
+				
+				break ;
+			}
+		}
 	  }
 	
 	public void jump() {
 		if (data.isJumping()) {
-			Position p = new Position(data.getHeroesPosition().x, data.getHeroesPosition().y - 7);
+			Position p = new Position(data.getHeroesPosition().x, data.getHeroesPosition().y - HardCodedParameters.jumpForce);
 			data.setHeroesPosition(p);
 		}
 	}
@@ -160,17 +179,14 @@ public class Engine implements EngineService, RequireDataService{
 	    return intersection;
 	}
 	
-	private boolean intersection(Rectangle r1, Rectangle r2) {
-		double y1 = r1.getTranslateY() + data.getVitesseY();
-		double yh = y1 + r1.getHeight();
+	private boolean intersection(Rectangle rect1, Rectangle rect2) {
+		if (rect1.getTranslateX() < rect2.getTranslateX() + rect2.getWidth() &&
+				   rect1.getTranslateX() + rect1.getWidth() > rect2.getTranslateX() &&
+				   rect1.getTranslateY() < rect2.getTranslateY() + rect2.getHeight() &&
+				   rect1.getTranslateY() + rect1.getHeight() > rect2.getTranslateY()) {
+			  return true;
+		  }
 		
-		double x1 = r1.getTranslateX();
-		double xw = x1 + r1.getWidth();
-		
-	    if (y1 < r2.getTranslateY() && yh > r2.getTranslateY()
-	    		&& x1 + r1.getWidth() > r2.getTranslateX() && x1 < r2.getTranslateX() + r2.getWidth()) {
-	            return true;
-	    }
 	    return false;
 	}
 	
@@ -190,7 +206,8 @@ public class Engine implements EngineService, RequireDataService{
 		double x2 = r2.getTranslateX();
 		double xw = x2 + r2.getWidth();
 		
-		if (rec.getTranslateX() + rec.getWidth() > x2 && rec.getTranslateX() + rec.getWidth() < xw) {
+		if ((rec.getTranslateX() + rec.getWidth() > x2 && rec.getTranslateX() + rec.getWidth() < xw)
+				|| (rec.getTranslateX() > x2 && rec.getTranslateX() < xw)) {
 			data.setIsAddPiece(false);
 		}
 	}

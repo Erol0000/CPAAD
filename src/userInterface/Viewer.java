@@ -64,25 +64,29 @@ public class Viewer implements ViewerService, RequireReadService{
     door.setTranslateX(400);
     door.setTranslateY(420);
     
-    rec1= new Rectangle(65, 20);
+    rec1= new Rectangle(65, 65);
     rec1.setTranslateX(70);
     rec1.setTranslateY(341);
     rec1.setFill(Color.BLUE);
+    rec1.setOpacity(0.5);
     
-    rec2= new Rectangle(65, 20);
+    rec2= new Rectangle(65, 65);
     rec2.setTranslateX(237);
     rec2.setTranslateY(245);
     rec2.setFill(Color.BLUE);
+    rec2.setOpacity(0.5);
     
-    rec3= new Rectangle(149, 20);
+    rec3= new Rectangle(149, 50);
     rec3.setTranslateX(0);
     rec3.setTranslateY(515);
     rec3.setFill(Color.RED);
-    
-    rec4= new Rectangle(156, 20);
+    rec3.setOpacity(0.5);
+
+    rec4= new Rectangle(156, 50);
     rec4.setTranslateX(285);
     rec4.setTranslateY(515);
     rec4.setFill(Color.BLUE);
+    rec4.setOpacity(0.5);
     
     
     data.addCollisionMap(rec1);

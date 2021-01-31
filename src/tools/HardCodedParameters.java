@@ -14,8 +14,7 @@ public class HardCodedParameters {
   public static final int enginePaceMillis = 100,
                           spriteSlowDownRate = 7;
   public static final double g = 0.1;
-  public static final double vitesseSaut = 0.022d;
-
+  public static final double jumpForce = 7;
   public static final double friction = 0.50;
 
   //---MISCELLANOUS---//
